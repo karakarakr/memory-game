@@ -1,4 +1,5 @@
 const cards = document.querySelectorAll('.memory-card');
+const countCards = cards.length;
 
 let hasFlippedCard = false;
 let lockBoard = false;
@@ -24,6 +25,7 @@ function flipCard() {
 
 function checkForMatch() {
     let isMatch = firstCard.dataset.clan === secondCard.dataset.clan;
+    checkCards(countCards);
     isMatch ? disableCards() : unflipCards();
 }
 
@@ -49,6 +51,17 @@ function unflipCards() {
 function resetBoard() {
     [hasFlippedCard, lockBoard] = [false, false];
     [firstCard, secondCard] = [null, null];
+}
+
+function checkCards(count) {
+    const flippedCards = document.querySelectorAll('.flip');
+    console.log(count);
+    console.log(flippedCards.length);
+    if (count == flippedCards.length) {
+        const title = document.querySelector('h1');
+        alert('Congrats!\nYou\'ve completed memory game!');
+        title.innerText = 'Game completed!';
+    }
 }
 
 (function shuffle() {

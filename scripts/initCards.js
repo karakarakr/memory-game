@@ -42,4 +42,7 @@ function initCards(count) {
     }
 }
 
-(() => initCards(8))();
+(() => {
+    const count = +prompt('Enter your count: ');
+    initCards(count);
+})();
