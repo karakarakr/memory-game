@@ -1,7 +1,9 @@
-const cards = document.querySelectorAll('.memory-card');
+const btnStart = document.getElementById('start-game');
+let cards = document.querySelectorAll('.memory-card');
 const title = document.querySelector('h1');
-const countCards = cards.length;
+let countCards = cards.length;
 
+let winGame = false;
 let hasFlippedCard = false;
 let lockBoard = false;
 let firstCard, secondCard;
@@ -54,9 +56,13 @@ function resetBoard() {
     [firstCard, secondCard] = [null, null];
 }
 
+function clearCards() {
+    const grid = document.querySelector('.memory-game');
+    grid.innerHTML = '';
+}
+
 function startCountdown(minutes, seconds) {
     let totalSeconds = minutes * 60 + seconds;
-    const timerElement = document.getElementById('timer');
 
     const interval = setInterval(() => {
         const mins = Math.floor(totalSeconds / 60);
@@ -68,6 +74,12 @@ function startCountdown(minutes, seconds) {
             clearInterval(interval);
             title.textContent = "Time is up! Game Over!";
             lockBoard = true;
+        }
+
+        if (winGame) {
+            clearInterval(interval);
+            winGame = false;
+            title.innerText = `Game completed: ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
         totalSeconds--;
@@ -82,6 +94,7 @@ function checkCards(count) {
     if (count == flippedCards.length) {
         alert('Congrats!\nYou\'ve completed memory game!');
         title.innerText = 'Game completed!';
+        winGame = true;
     }
 }
 
@@ -92,8 +105,12 @@ function checkCards(count) {
     });
 })();
 
-(() => {
+const startGame = () => {
     const level = +prompt('Select level( easy - 1, medium - 2, high - 3 ): ');
+    const count = +prompt('Enter your count: ');
+
+    clearCards();
+    initCards(count);
 
     switch(level) {
         case 1:
@@ -109,5 +126,10 @@ function checkCards(count) {
             startCountdown(3, 0);
             break;
     }
-})();
-cards.forEach(card => card.addEventListener('click', flipCard));
+
+    cards = document.querySelectorAll('.memory-card');
+    countCards = cards.length;
+    cards.forEach(card => card.addEventListener('click', flipCard));
+};
+
+btnStart.addEventListener('click', startGame);

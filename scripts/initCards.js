@@ -41,8 +41,3 @@ function initCards(count) {
         addCard(randomCardIdx, clanList);
     }
 }
-
-(() => {
-    const count = +prompt('Enter your count: ');
-    initCards(count);
-})();
