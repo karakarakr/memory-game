@@ -1,4 +1,5 @@
 const cards = document.querySelectorAll('.memory-card');
+const title = document.querySelector('h1');
 const countCards = cards.length;
 
 let hasFlippedCard = false;
@@ -53,12 +54,32 @@ function resetBoard() {
     [firstCard, secondCard] = [null, null];
 }
 
+function startCountdown(minutes, seconds) {
+    let totalSeconds = minutes * 60 + seconds;
+    const timerElement = document.getElementById('timer');
+
+    const interval = setInterval(() => {
+        const mins = Math.floor(totalSeconds / 60);
+        const secs = totalSeconds % 60;
+
+        title.textContent = `Game started: ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+        if (totalSeconds <= 0) {
+            clearInterval(interval);
+            title.textContent = "Time is up! Game Over!";
+            lockBoard = true;
+        }
+
+        totalSeconds--;
+    }, 1000);
+}
+
+
 function checkCards(count) {
     const flippedCards = document.querySelectorAll('.flip');
     console.log(count);
     console.log(flippedCards.length);
     if (count == flippedCards.length) {
-        const title = document.querySelector('h1');
         alert('Congrats!\nYou\'ve completed memory game!');
         title.innerText = 'Game completed!';
     }
@@ -71,4 +92,22 @@ function checkCards(count) {
     });
 })();
 
+(() => {
+    const level = +prompt('Select level( easy - 1, medium - 2, high - 3 ): ');
+
+    switch(level) {
+        case 1:
+            startCountdown(3, 0);
+            break;
+        case 2:
+            startCountdown(1, 50);
+            break;
+        case 3:
+            startCountdown(0, 30);
+            break;
+        default:
+            startCountdown(3, 0);
+            break;
+    }
+})();
 cards.forEach(card => card.addEventListener('click', flipCard));
